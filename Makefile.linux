@@ -1,0 +1,25 @@
+# Make using Linux.
+# Make sure path includes /usr/local/bin
+
+PROGRAM = afm_explorer
+CXX     = $(shell wx-config --cxx)
+WXFLAGS = $(shell wx-config --libs) 
+CFLAGS  = -g -I/usr/local/include -I/usr/local/include/opencv
+LDFLAGS = -L/usr/local/lib -lcv -lcxcore -lcvaux -lml -lhighgui
+OBJECTS = $(PROGRAM).o $(PROGRAM)_gui.o main.o process_image.o cv_thin.o scroll_win.o
+
+# implementation
+
+.SUFFIXES:      .o .cpp
+
+.cpp.o :
+	$(CXX) -c `wx-config --cxxflags` $(CFLAGS) -o $@ $<
+
+$(PROGRAM):     $(OBJECTS)
+	$(CXX) -o $(PROGRAM) $(OBJECTS) $(WXFLAGS) $(LDFLAGS)
+
+all:    $(PROGRAM)
+
+clean:
+	rm -f *.o $(PROGRAM)
+

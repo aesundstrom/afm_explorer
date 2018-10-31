@@ -1,0 +1,25 @@
+# Make using MSYS, not Cygwin.
+# Make sure path includes c:\OpenCV\bin
+
+PROGRAM = afm_explorer
+CXX     = $(shell wx-config --cxx)
+WXFLAGS = $(shell wx-config --libs) 
+CFLAGS  = -g -I/usr/local/include/opencv
+LDFLAGS = -LC:/OpenCV/lib -lcv -lcxcore -lcvaux -lml -lhighgui 
+OBJECTS = $(PROGRAM).o $(PROGRAM)_gui.o main.o process_image.o cv_thin.o scroll_win.o
+
+# implementation
+
+.SUFFIXES:      .o .cpp
+
+.cpp.o :
+	$(CXX) -c `wx-config --cxxflags` $(CFLAGS) -o $@ $<
+
+$(PROGRAM):     $(OBJECTS)
+	$(CXX) -o $(PROGRAM) $(OBJECTS) $(WXFLAGS) $(LDFLAGS)
+
+all:    $(PROGRAM)
+
+clean:
+	rm -f *.o $(PROGRAM)
+
